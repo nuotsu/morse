@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme {
+	--color-background: #000;
+	--color-foreground: #fff;
+
+	--spacing-ch: 1ch;
+	--spacing-lh: 1lh;
+}
+
+@custom-variant hover (&:hover);
+
+@layer base {
+	html {
+		@apply bg-background leading-none text-foreground;
+	}
+
+	button {
+		cursor: pointer;
+	}
+
+	:focus {
+		outline: none;
+	}
+}
