@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isTyping } from '#lib/dom.ts'
 	import type { Group } from '#lib/morse.ts'
 
 	type Props = {
@@ -9,6 +10,7 @@
 
 	let { enabled = $bindable(), onchange }: Props = $props()
 
+	// the first letter of each label is its shift + key shortcut
 	const groups: { id: Group; label: string }[] = [
 		{ id: 'alphabet', label: 'Alphabet' },
 		{ id: 'numbers', label: 'Numbers' },
@@ -55,7 +57,27 @@
 
 		onchange?.()
 	}
+
+	const shortcuts: Record<string, Group> = {
+		KeyA: 'alphabet',
+		KeyN: 'numbers',
+		KeyP: 'punctuation'
+	}
+
+	// shift + A / N / P toggles a group
+	function onkeydown(e: KeyboardEvent) {
+		const id = shortcuts[e.code]
+		if (!id || !e.shiftKey || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
+		if (isTyping(e.target)) return
+
+		e.preventDefault()
+		enabled[id] = !enabled[id]
+		if (!groups.some((g) => enabled[g.id])) enabled.alphabet = true
+		onchange?.()
+	}
 </script>
+
+<svelte:window {onkeydown} />
 
 <fieldset class="flex flex-wrap justify-center gap-x-[2ch] px-ch">
 	<legend class="sr-only">Characters</legend>
@@ -68,7 +90,8 @@
 				onclick={(e) => onclick(e, id)}
 				onchange={(e) => update(e, id)}
 			/>
-			{label}
+
+			<kbd>{label[0]}</kbd>{label.slice(1)}
 		</label>
 	{/each}
 </fieldset>

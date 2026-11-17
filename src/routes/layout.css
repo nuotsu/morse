@@ -4,6 +4,9 @@
 	--color-background: #000;
 	--color-foreground: #fff;
 
+	--color-dot: var(--color-amber-400);
+	--color-dash: var(--color-cyan-400);
+
 	--spacing-ch: 1ch;
 	--spacing-lh: 1lh;
 }
@@ -42,11 +45,6 @@
 }
 
 @layer base {
-	:root {
-		--dot: var(--color-amber-400);
-		--dash: var(--color-cyan-400);
-	}
-
 	:focus {
 		outline: none;
 	}

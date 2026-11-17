@@ -73,13 +73,21 @@
 		border-radius: 100%;
 		aspect-ratio: 1;
 		height: 1.25lh;
-		background-color: color-mix(in oklab, var(--dot) var(--mix, 100%), var(--color-background));
+		background-color: color-mix(
+			in oklab,
+			var(--color-dot) var(--mix, 100%),
+			var(--color-background)
+		);
 	}
 
 	[data-type='DASH']::before {
 		width: var(--w);
 		height: 1lh;
-		background-color: color-mix(in oklab, var(--dash) var(--mix, 100%), var(--color-background));
+		background-color: color-mix(
+			in oklab,
+			var(--color-dash) var(--mix, 100%),
+			var(--color-background)
+		);
 	}
 
 	[data-type='DASH'][data-axis='vertical']::before {

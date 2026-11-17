@@ -212,6 +212,14 @@ export function buildChart(enabled: Record<Group, boolean>): Chart {
 	return chart
 }
 
+const everything: Record<Group, boolean> = { alphabet: true, numbers: true, punctuation: true }
+
+/** Whether `code` is a character, or the start of one, in any group (enabled or not). */
+export const isKnownCode = (code: string) => buildChart(everything).byCode.has(code)
+
+/** The character for a code in any group, or '' if it's only a prefix. */
+export const decodeCode = (code: string) => allChars.get(code)?.char ?? ''
+
 /** Nodes visited from the start to `code`, in order (excludes the start). */
 export function pathTo(chart: Chart, code: string): MorseNode[] {
 	return [...code].map((_, i) => chart.byCode.get(code.slice(0, i + 1))!)
