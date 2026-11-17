@@ -33,7 +33,7 @@
 </script>
 
 <main class="flex min-h-svh flex-col gap-ch *:w-full">
-	<h1 class="p-ch text-center select-none">Morse</h1>
+	<h1 class="p-ch text-center">Morse</h1>
 
 	<div class="my-auto flex flex-col gap-lh *:w-full *:px-ch">
 		<Controls bind:enabled />

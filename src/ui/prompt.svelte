@@ -74,7 +74,7 @@
 		bind:value></textarea>
 
 	<fieldset
-		class="absolute inset-x-[2ch] bottom-full z-1 flex min-w-max translate-y-[.5lh] flex-wrap items-center select-none *:bg-background *:px-[.5ch]"
+		class="absolute inset-x-[2ch] bottom-full z-1 flex min-w-max translate-y-[.5lh] flex-wrap items-center *:bg-background *:px-[.5ch]"
 	>
 		<button onclick={toggle} aria-label={playing ? 'Pause' : 'Play'}>
 			{playing ? '⏸️' : '▶️'}
@@ -83,7 +83,7 @@
 		<button class="ml-auto" aria-label="Clear" onclick={() => (value = '')}>🗑️</button>
 	</fieldset>
 
-	<output class="absolute inset-x-0 bottom-full order-first p-ch backdrop-blur select-none">
+	<output class="absolute inset-x-0 bottom-full order-first p-ch backdrop-blur">
 		<div class="flex max-h-[10lh] flex-wrap content-start gap-x-ch gap-y-[.25lh] overflow-y-auto">
 			{#each words as word, i (i)}
 				{#if parsed.breaks.has(i)}

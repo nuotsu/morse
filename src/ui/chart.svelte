@@ -80,7 +80,7 @@
 <svelte:window {onkeydown} />
 
 <figure
-	class="chart isolate grid text-center select-none"
+	class="chart isolate grid text-center"
 	style="--cols: {chart.cols}; grid-template-columns: repeat({chart.start.col -
 		1}, var(--w)) min-content repeat({chart.cols -
 		chart.start.col}, var(--w)); grid-template-rows: repeat({chart.rows}, var(--h))"

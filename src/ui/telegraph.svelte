@@ -92,9 +92,9 @@
 
 <svelte:window onkeydown={onwindowkey} onkeyup={onwindowkey} />
 
-<fieldset class="mx-auto grid max-w-[20ch] place-items-center px-ch select-none">
+<fieldset class="mx-auto grid max-w-[20ch] place-items-center px-ch">
 	<button
-		class="block aspect-square w-full touch-none border text-current/25 select-none [-webkit-touch-callout:none] [-webkit-user-select:none] not-active:transition-colors not-active:duration-250 hover:bg-current/25 data-[held=DASH]:bg-dash! data-[held=DOT]:bg-dot!"
+		class="block aspect-square w-full touch-none border text-current/25 not-active:transition-colors not-active:duration-250 hover:bg-current/25 data-[held=DASH]:bg-dash data-[held=DOT]:bg-dot"
 		data-held={held}
 		onpointerdown={(e) => {
 			e.currentTarget.setPointerCapture(e.pointerId)
@@ -118,3 +118,9 @@
 		Telegraph
 	</button>
 </fieldset>
+
+<style>
+	button {
+		-webkit-touch-callout: none;
+	}
+</style>
