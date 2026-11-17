@@ -57,7 +57,7 @@
 	}
 </script>
 
-<fieldset class="mx-auto flex flex-wrap justify-center gap-x-[2ch]">
+<fieldset class="flex flex-wrap justify-center gap-x-[2ch] px-ch">
 	<legend class="sr-only">Characters</legend>
 
 	{#each groups as { id, label } (id)}

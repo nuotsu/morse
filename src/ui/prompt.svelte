@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { DOT, encodeChar } from '#lib/morse.ts'
+	import { scale } from 'svelte/transition'
 
 	let { selected = $bindable(null) }: { selected?: string | null } = $props()
 
@@ -54,6 +55,8 @@
 					{#each word as { char, code }, j (j)}
 						<ruby>
 							<button
+								in:scale|global={{ start: 0.5, duration: 250 }}
+								out:scale|global={{ start: 0.5, duration: 250 }}
 								class="flex items-center gap-[.25ch] bg-foreground/10 px-[.5ch] transition-colors aria-pressed:bg-foreground/25"
 								aria-pressed={selected === code}
 								onclick={() => (selected = selected === code ? null : code)}

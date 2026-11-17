@@ -16,9 +16,12 @@
 <main class="flex min-h-svh flex-col gap-ch *:w-full">
 	<h1 class="p-ch text-center">Morse</h1>
 
-	<div class="my-auto px-ch">
+	<div class="my-auto flex flex-col gap-ch *:px-ch">
 		<Controls bind:enabled />
-		<MorseChart {enabled} bind:selected />
+
+		<div class="mx-auto no-scrollbar w-full max-w-max overflow-x-auto py-0.5">
+			<MorseChart {enabled} bind:selected />
+		</div>
 	</div>
 
 	<Prompt bind:selected />

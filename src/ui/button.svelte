@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { DOT, type MorseNode } from '#lib/morse.ts'
+	import { scale } from 'svelte/transition'
 
 	type Props = {
 		node: MorseNode
@@ -20,6 +21,8 @@
 </script>
 
 <button
+	in:scale|global={{ start: 0.5, duration: 250 }}
+	out:scale|global={{ start: 0.5, duration: 250 }}
 	style="grid-column: {col}; grid-row: {row}; --dx: {dx}; --ax: {Math.abs(dx)}; --ay: {Math.abs(
 		dy
 	)}"
