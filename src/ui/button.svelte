@@ -27,9 +27,9 @@
 	data-v={dy > 0 ? 'down' : 'up'}
 	data-on-path={onPath || undefined}
 	data-dimmed={dimmed || undefined}
-	aria-pressed={selected}
 	aria-hidden={junction || undefined}
 	disabled={junction}
+	aria-pressed={selected}
 	{onclick}
 >
 	<span

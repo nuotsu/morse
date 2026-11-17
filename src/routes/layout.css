@@ -10,7 +10,47 @@
 
 @custom-variant hover (&:hover);
 
+@property --w {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --h {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --gap-x {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --gap-y {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --sx {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --sy {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+
 @layer base {
+	:root {
+		--dot: var(--color-amber-400);
+		--dash: var(--color-cyan-400);
+	}
+
+	* {
+		min-width: 0;
+	}
+
 	html {
 		@apply bg-background leading-none text-foreground;
 	}
@@ -21,5 +61,13 @@
 
 	:focus {
 		outline: none;
+	}
+}
+
+@utility no-scrollbar {
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
 	}
 }
