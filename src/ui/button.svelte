@@ -32,14 +32,14 @@
 	aria-pressed={selected}
 	{onclick}
 >
-	<span
+	<kbd
 		class="relative isolate grid text-background"
 		data-type={code.at(-1) === DOT ? 'DOT' : 'DASH'}
 		data-junction={junction || undefined}
 		data-axis={dx === 0 ? 'vertical' : 'horizontal'}
 	>
 		{char}
-	</span>
+	</kbd>
 </button>
 
 <style>
@@ -155,7 +155,7 @@
 		 * that would make it a stacking context and trap its lines above neighbours.
 		 */
 		&[data-dimmed] {
-			> span {
+			> kbd {
 				--mix: 50%;
 			}
 

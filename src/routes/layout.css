@@ -47,6 +47,10 @@
 		--dash: var(--color-cyan-400);
 	}
 
+	:focus {
+		outline: none;
+	}
+
 	* {
 		min-width: 0;
 	}
@@ -56,11 +60,12 @@
 	}
 
 	button {
+		user-select: none;
 		cursor: pointer;
 	}
 
-	:focus {
-		outline: none;
+	kbd {
+		font: inherit;
 	}
 }
 

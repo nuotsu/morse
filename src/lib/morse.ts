@@ -216,3 +216,8 @@ export function buildChart(enabled: Record<Group, boolean>): Chart {
 export function pathTo(chart: Chart, code: string): MorseNode[] {
 	return [...code].map((_, i) => chart.byCode.get(code.slice(0, i + 1))!)
 }
+
+const codeByChar = new Map([...allChars].map(([code, { char }]) => [char, code]))
+
+/** Morse code for a single character (case-insensitive), or undefined if it has none. */
+export const encodeChar = (char: string) => codeByChar.get(char.toUpperCase())

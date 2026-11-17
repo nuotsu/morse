@@ -7,9 +7,10 @@
 </script>
 
 <svelte:head>
+	<title>Morse</title>
+	<meta name="description" content="" />
+
 	<link rel="icon" href={favicon} />
 </svelte:head>
-
-<h1 class="text-center">Morse</h1>
 
 {@render children()}
