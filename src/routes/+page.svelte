@@ -42,7 +42,7 @@
 			<Chart {enabled} bind:selected bind:transcribe onstart={start} onwrite={write} />
 		</div>
 
-		<Telegraph bind:selected onstart={start} onwrite={write} />
+		<Telegraph {enabled} bind:selected onstart={start} onwrite={write} />
 	</div>
 
 	<Prompt bind:selected bind:value={text} />

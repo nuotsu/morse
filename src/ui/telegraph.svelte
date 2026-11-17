@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { holdTone, stop, UNIT } from '#lib/audio.svelte.ts'
-	import { DASH, DOT, decodeCode, isKnownCode } from '#lib/morse.ts'
+	import { canExtend, DASH, DOT, decodeCode, isKnownCode, type Group } from '#lib/morse.ts'
 
 	let {
 		selected = $bindable(null),
+		enabled,
 		onstart,
 		onwrite
 	}: {
 		selected?: string | null
+		enabled: Record<Group, boolean>
 		/** a new input began (the page clears the prompt on the first one while transcribing) */
 		onstart?: () => void
 		/** a character was finished */
@@ -25,9 +27,15 @@
 	let commitTimer: ReturnType<typeof setTimeout>
 	let lingerTimer: ReturnType<typeof setTimeout>
 
-	// show the in-progress symbol on the chart, ignoring paths that lead nowhere
-	function show(symbol: string) {
-		if (isKnownCode(buffer + symbol)) selected = buffer + symbol
+	// the code `symbol` would make: it continues the buffer, or (when that leads nowhere) starts anew
+	const next = (symbol: string) => (isKnownCode(buffer + symbol) ? buffer + symbol : symbol)
+
+	const show = (symbol: string) => (selected = next(symbol))
+
+	// finish the character in the buffer
+	function commit() {
+		if (buffer) onwrite?.(decodeCode(buffer))
+		buffer = ''
 	}
 
 	function down() {
@@ -53,12 +61,16 @@
 
 		const symbol = held === 'DOT' ? DOT : DASH
 		held = null
-		if (isKnownCode(buffer + symbol)) buffer += symbol
 
-		commitTimer = setTimeout(() => {
-			onwrite?.(decodeCode(buffer))
-			buffer = ''
-		}, COMMIT_MS)
+		// smart parse, for fast input with no pauses: a symbol that can't continue the buffer
+		// ends its character and starts the next, and so does a code nothing can extend
+		if (!isKnownCode(buffer + symbol)) commit()
+		buffer += symbol
+		// a finished character is only held back for a longer one in an enabled group, so
+		// letters win over numbers while numbers are off: ••••• is H then E, not 5
+		if (!canExtend(buffer, decodeCode(buffer) ? enabled : undefined)) commit()
+
+		commitTimer = setTimeout(commit, COMMIT_MS)
 		lingerTimer = setTimeout(() => (selected = null), LINGER_MS)
 	}
 

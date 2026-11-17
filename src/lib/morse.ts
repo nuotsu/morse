@@ -217,6 +217,14 @@ const everything: Record<Group, boolean> = { alphabet: true, numbers: true, punc
 /** Whether `code` is a character, or the start of one, in any group (enabled or not). */
 export const isKnownCode = (code: string) => buildChart(everything).byCode.has(code)
 
+/** Whether a character in an enabled group has a code that continues `code`. */
+export function canExtend(code: string, enabled: Record<Group, boolean> = everything) {
+	for (const [other, { group }] of allChars) {
+		if (other.length > code.length && other.startsWith(code) && enabled[group]) return true
+	}
+	return false
+}
+
 /** The character for a code in any group, or '' if it's only a prefix. */
 export const decodeCode = (code: string) => allChars.get(code)?.char ?? ''
 
