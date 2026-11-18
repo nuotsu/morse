@@ -1,15 +1,19 @@
 <script lang="ts">
+	import { untrack } from 'svelte'
 	import { holdTone, stop, UNIT } from '#lib/audio.svelte.ts'
 	import { canExtend, DASH, DOT, decodeCode, isKnownCode, type Group } from '#lib/morse.ts'
 
 	let {
 		selected = $bindable(null),
 		enabled,
+		locked = false,
 		onstart,
 		onwrite
 	}: {
 		selected?: string | null
 		enabled: Record<Group, boolean>
+		/** can't be keyed (e.g. while the mic is receiving) */
+		locked?: boolean
 		/** a new input began (the page clears the prompt on the first one while transcribing) */
 		onstart?: () => void
 		/** a character was finished */
@@ -39,7 +43,7 @@
 	}
 
 	function down() {
-		if (held) return
+		if (held || locked) return
 		clearTimeout(commitTimer)
 		clearTimeout(lingerTimer)
 		stop()
@@ -74,6 +78,11 @@
 		lingerTimer = setTimeout(() => (selected = null), LINGER_MS)
 	}
 
+	// receiving can start mid-press, and a disabled button gets no release: let go now
+	$effect(() => {
+		if (locked) untrack(up)
+	})
+
 	// space drives the telegraph from anywhere, unless focus is on something that uses space itself
 	function onwindowkey(e: KeyboardEvent) {
 		if (e.key !== ' ' || e.metaKey || e.ctrlKey || e.altKey) return
@@ -92,32 +101,31 @@
 
 <svelte:window onkeydown={onwindowkey} onkeyup={onwindowkey} />
 
-<fieldset class="mx-auto grid max-w-[20ch] place-items-center px-ch">
-	<button
-		class="block aspect-square w-full touch-none border text-current/25 not-active:transition-colors not-active:duration-250 hover:bg-current/25 data-[held=DASH]:bg-dash data-[held=DOT]:bg-dot"
-		data-held={held}
-		onpointerdown={(e) => {
-			e.currentTarget.setPointerCapture(e.pointerId)
-			down()
-		}}
-		onpointerup={up}
-		onpointercancel={up}
-		onkeydown={(e) => {
-			if (!isKey(e)) return
-			e.preventDefault()
-			if (!e.repeat) down()
-		}}
-		onkeyup={(e) => {
-			if (!isKey(e)) return
-			e.preventDefault()
-			up()
-		}}
-		onblur={up}
-		oncontextmenu={(e) => e.preventDefault()}
-	>
-		Telegraph
-	</button>
-</fieldset>
+<button
+	class="block aspect-square w-full touch-none border text-current/25 not-active:transition-colors not-active:duration-250 hover:bg-current/25 disabled:cursor-not-allowed disabled:opacity-50 data-[held=DASH]:bg-dash data-[held=DOT]:bg-dot"
+	data-held={held}
+	disabled={locked}
+	onpointerdown={(e) => {
+		e.currentTarget.setPointerCapture(e.pointerId)
+		down()
+	}}
+	onpointerup={up}
+	onpointercancel={up}
+	onkeydown={(e) => {
+		if (!isKey(e)) return
+		e.preventDefault()
+		if (!e.repeat) down()
+	}}
+	onkeyup={(e) => {
+		if (!isKey(e)) return
+		e.preventDefault()
+		up()
+	}}
+	onblur={up}
+	oncontextmenu={(e) => e.preventDefault()}
+>
+	📡 Telegraph
+</button>
 
 <style>
 	button {

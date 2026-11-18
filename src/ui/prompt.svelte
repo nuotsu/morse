@@ -57,11 +57,16 @@
 
 	const words = $derived(parsed.words)
 
-	// cmd/ctrl + enter plays, even while typing in the textarea
+	// cmd/ctrl + enter plays, cmd/ctrl + backspace clears, even while typing in the textarea
 	function onkeydown(e: KeyboardEvent) {
-		if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey) || e.repeat) return
-		e.preventDefault()
-		toggle()
+		if (!(e.metaKey || e.ctrlKey) || e.repeat) return
+		if (e.key === 'Enter') {
+			e.preventDefault()
+			toggle()
+		} else if (e.key === 'Backspace') {
+			e.preventDefault()
+			value = ''
+		}
 	}
 </script>
 

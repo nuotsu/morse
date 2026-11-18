@@ -4,6 +4,7 @@
 	import Chart from '#ui/chart.svelte'
 	import Prompt from '#ui/prompt.svelte'
 	import Telegraph from '#ui/telegraph.svelte'
+	import Receiver from '#ui/receiver.svelte'
 
 	let enabled = $state<Record<Group, boolean>>({
 		alphabet: true,
@@ -13,12 +14,20 @@
 
 	let selected = $state<string | null>(null)
 	let transcribe = $state(false)
+	let receiving = $state(false)
 	let text = $state('Hello, world!')
 
 	// transcribing starts from a blank prompt, on the first input after it's switched on
 	let cleared = false
 	$effect(() => {
 		if (!transcribe) cleared = false
+	})
+
+	// receiving writes to the prompt, so it switches transcribing on (and starts from a blank one)
+	$effect(() => {
+		if (!receiving) return
+		transcribe = true
+		cleared = false
 	})
 
 	function start() {
@@ -39,10 +48,26 @@
 		<Controls bind:enabled />
 
 		<div class="mx-auto no-scrollbar max-w-max overflow-x-auto py-1">
-			<Chart {enabled} bind:selected bind:transcribe onstart={start} onwrite={write} />
+			<Chart
+				{enabled}
+				bind:selected
+				bind:transcribe
+				locked={receiving}
+				onstart={start}
+				onwrite={write}
+			/>
 		</div>
 
-		<Telegraph {enabled} bind:selected onstart={start} onwrite={write} />
+		<div class="mx-auto grid max-w-[20ch] gap-ch">
+			<Telegraph {enabled} bind:selected locked={receiving} onstart={start} onwrite={write} />
+			<Receiver
+				bind:selected
+				{enabled}
+				bind:listening={receiving}
+				onstart={start}
+				onwrite={write}
+			/>
+		</div>
 	</div>
 
 	<Prompt bind:selected bind:value={text} />

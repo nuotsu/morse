@@ -8,12 +8,15 @@
 		enabled,
 		selected = $bindable(null),
 		transcribe = $bindable(false),
+		locked = false,
 		onstart,
 		onwrite
 	}: {
 		enabled: Record<Group, boolean>
 		selected?: string | null
 		transcribe?: boolean
+		/** letters can't be entered by clicking or typing (e.g. while the mic is receiving) */
+		locked?: boolean
 		/** a new input began (the page clears the prompt on the first one while transcribing) */
 		onstart?: () => void
 		/** a character was entered */
@@ -39,6 +42,7 @@
 	)
 
 	const toggle = (code: string) => {
+		if (locked) return
 		if (selected === code) {
 			selected = null
 			stop()
@@ -67,7 +71,8 @@
 
 		if (e.key === 'Escape') return (selected = null)
 
-		if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
+		// shift + anything else (e.g. "?" or "!") isn't a chart shortcut
+		if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
 
 		const code = codeByChar.get(e.key.toUpperCase())
 		if (!code) return
@@ -80,7 +85,8 @@
 <svelte:window {onkeydown} />
 
 <figure
-	class="chart isolate grid text-center lg:text-[1.5em]"
+	class="chart isolate grid text-center data-locked:[&_kbd]:cursor-not-allowed"
+	data-locked={locked || undefined}
 	style="--cols: {chart.cols}; grid-template-columns: repeat({chart.start.col -
 		1}, var(--w)) min-content repeat({chart.cols -
 		chart.start.col}, var(--w)); grid-template-rows: repeat({chart.rows}, var(--h))"

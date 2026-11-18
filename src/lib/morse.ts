@@ -228,6 +228,35 @@ export function canExtend(code: string, enabled: Record<Group, boolean> = everyt
 /** The character for a code in any group, or '' if it's only a prefix. */
 export const decodeCode = (code: string) => allChars.get(code)?.char ?? ''
 
+const LONGEST = Math.max(...[...allChars.keys()].map((code) => code.length))
+
+/** The group a code's character belongs to, if it's a character. */
+export const groupOf = (code: string) => allChars.get(code)?.group
+
+/**
+ * Characters for a code, from enabled groups only: the character itself if its group is
+ * enabled, otherwise the fewest enabled characters that spell it out (••••• is H E with only
+ * letters on, 5 with numbers on too). '' if the enabled groups can't spell it.
+ */
+export function decodeEnabled(code: string, enabled: Record<Group, boolean>) {
+	const group = groupOf(code)
+	if (group && enabled[group]) return decodeCode(code)
+
+	// fewest characters for each prefix of the code, built up one end at a time; on a tie the
+	// shortest last one wins, so earlier characters run long, as they would when keyed live
+	const best: (string[] | undefined)[] = [[]]
+	for (let end = 1; end <= code.length; end++) {
+		for (let start = end - 1; start >= Math.max(0, end - LONGEST); start--) {
+			const piece = code.slice(start, end)
+			const before = best[start]
+			const group = groupOf(piece)
+			if (!before || !group || !enabled[group]) continue
+			if (!best[end] || before.length + 1 < best[end]!.length) best[end] = [...before, piece]
+		}
+	}
+	return (best[code.length] ?? []).map(decodeCode).join('')
+}
+
 /** Nodes visited from the start to `code`, in order (excludes the start). */
 export function pathTo(chart: Chart, code: string): MorseNode[] {
 	return [...code].map((_, i) => chart.byCode.get(code.slice(0, i + 1))!)

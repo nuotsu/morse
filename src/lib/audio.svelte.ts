@@ -4,6 +4,10 @@ import { DOT } from './morse.ts'
 export const sound = $state({ enabled: true })
 
 export const UNIT = 0.08 // seconds per dot
+// pauses when playing the prompt, in dots: between characters (3 is standard; longer, as in
+// Farnsworth timing, gives each character room to be recognised) and between words
+const CHAR_GAP = 5
+const WORD_GAP = 7
 const FREQ = 600
 const MIN_HOLD = 0.06 // shortest a tapped tone sounds, in seconds
 const RAMP = 0.005 // avoids clicks at the edges of each tone
@@ -146,9 +150,9 @@ export async function playWords(
 				if (signal.aborted) return
 				onStep(i, j)
 				await playSymbols(code, signal)
-				if (j < word.length - 1) await sleep(UNIT * 3, signal)
+				if (j < word.length - 1) await sleep(UNIT * CHAR_GAP, signal)
 			}
-			if (i < words.length - 1) await sleep(UNIT * 7, signal)
+			if (i < words.length - 1) await sleep(UNIT * WORD_GAP, signal)
 		}
 	} finally {
 		if (current === controller) current = undefined
