@@ -1,11 +1,19 @@
 @import 'tailwindcss';
 
+@font-face {
+	font-family: 'Gallaudet';
+	src: url('../lib/assets/gallaudet.woff2') format('woff2');
+	font-display: block;
+}
+
 @theme {
 	--color-background: #000;
 	--color-foreground: #fff;
 
 	--color-dot: var(--color-amber-400);
 	--color-dash: var(--color-cyan-400);
+
+	--font-gallaudet: 'Gallaudet', sans-serif;
 
 	--spacing-ch: 1ch;
 	--spacing-lh: 1lh;
@@ -58,13 +66,74 @@
 	}
 
 	label,
-	button {
+	button,
+	summary {
 		user-select: none;
 		cursor: pointer;
 	}
 
 	kbd {
 		font: inherit;
+	}
+
+	details {
+		interpolate-size: allow-keywords;
+
+		&::details-content {
+			overflow: hidden;
+			transition:
+				block-size 0.25s,
+				grid-template-rows 0.25s,
+				content-visibility 0.25s allow-discrete;
+		}
+
+		@supports (interpolate-size: allow-keywords) {
+			&::details-content {
+				block-size: 0;
+			}
+			&[open]::details-content {
+				block-size: auto;
+			}
+		}
+
+		@supports not (interpolate-size: allow-keywords) {
+			&::details-content {
+				display: grid;
+				grid-template-rows: 0fr;
+			}
+
+			&[open]::details-content {
+				grid-template-rows: 1fr;
+			}
+
+			& > :not(summary) {
+				min-block-size: 0;
+				overflow: hidden;
+			}
+		}
+	}
+
+	summary {
+		gap: 0.5ch;
+		@apply inline-flex justify-center text-center;
+
+		&::after {
+			content: '+';
+			display: block;
+			height: 1.5ch;
+		}
+
+		:open > &::after {
+			content: '-';
+		}
+	}
+}
+
+@utility side-details {
+	@apply relative;
+
+	&::details-content {
+		@apply absolute top-0 right-full min-w-max;
 	}
 }
 

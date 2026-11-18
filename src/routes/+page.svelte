@@ -5,6 +5,7 @@
 	import Prompt from '#ui/prompt.svelte'
 	import Telegraph from '#ui/telegraph.svelte'
 	import Receiver from '#ui/receiver.svelte'
+	import Alphabet from '#ui/alphabet.svelte'
 
 	let enabled = $state<Record<Group, boolean>>({
 		alphabet: true,
@@ -72,6 +73,10 @@
 
 	<Prompt bind:selected bind:value={text} />
 </main>
+
+<aside class="fixed top-0 right-0 z-1">
+	<Alphabet />
+</aside>
 
 <style>
 	main {
