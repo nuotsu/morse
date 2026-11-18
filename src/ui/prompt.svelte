@@ -9,6 +9,7 @@
 	}: { selected?: string | null; value?: string } = $props()
 
 	let playing = $state<[number, number] | null>(null)
+	let hidden = $state(false)
 
 	let run = 0
 
@@ -68,8 +69,9 @@
 
 <article class="relative z-1 p-ch pt-0">
 	<textarea
-		class="field-sizing-content max-h-[10lh] w-full overflow-y-auto border p-ch"
+		class="field-sizing-content max-h-[10lh] w-full overflow-y-auto border border-foreground p-ch disabled:text-transparent disabled:placeholder:text-transparent"
 		rows={3}
+		disabled={hidden}
 		placeholder="Enter text to convert"
 		bind:value></textarea>
 
@@ -78,6 +80,14 @@
 	>
 		<button onclick={toggle} aria-label={playing ? 'Pause' : 'Play'}>
 			{playing ? '⏸️' : '▶️'}
+		</button>
+
+		<button
+			aria-label={hidden ? 'Show text' : 'Hide text'}
+			aria-pressed={hidden}
+			onclick={() => (hidden = !hidden)}
+		>
+			{hidden ? '👀' : '🫣'}
 		</button>
 
 		<button class="ml-auto" aria-label="Clear" onclick={() => (value = '')}>🗑️</button>

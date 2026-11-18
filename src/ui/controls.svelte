@@ -34,21 +34,24 @@
 		onchange?.()
 	}
 
-	// the browser has already toggled the box by the time a click handler runs, and still
-	// fires `change` after it, so a modified click has to overwrite the box and skip that
-	let skipChange = false
+	let inputs: HTMLInputElement[] = []
 
-	function onclick(e: MouseEvent & { currentTarget: HTMLInputElement }, id: Group) {
+	// Handled on the label rather than the input: a click on the label text is forwarded to
+	// the input as a second, synthetic click that browsers don't always give the modifier keys,
+	// but the original click on the label always has them. Cancelling it stops the native toggle
+	// (and the `change` event) altogether.
+	function onclick(e: MouseEvent, id: Group) {
 		if (!(e.metaKey || e.ctrlKey)) return
 
-		skipChange = true
+		e.preventDefault()
 		isolate(id)
-		e.currentTarget.checked = enabled[id]
+
+		// cancelling a checkbox click makes the browser restore the box *after* the handlers and
+		// Svelte's update have run, so put every box back in line with `enabled` once it's done
+		setTimeout(() => groups.forEach((g, i) => (inputs[i].checked = enabled[g.id])))
 	}
 
 	function update(e: Event & { currentTarget: HTMLInputElement }, id: Group) {
-		if (skipChange) return (skipChange = false)
-
 		enabled[id] = e.currentTarget.checked
 
 		// never leave everything off: fall back to the alphabet
@@ -82,12 +85,13 @@
 <fieldset class="flex flex-wrap justify-center gap-x-[2ch] px-ch">
 	<legend class="sr-only">Characters</legend>
 
-	{#each groups as { id, label } (id)}
-		<label>
+	{#each groups as { id, label }, i (id)}
+		<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+		<label onclick={(e) => onclick(e, id)}>
 			<input
 				type="checkbox"
+				bind:this={inputs[i]}
 				checked={enabled[id]}
-				onclick={(e) => onclick(e, id)}
 				onchange={(e) => update(e, id)}
 			/>
 

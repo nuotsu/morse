@@ -47,3 +47,9 @@
 
 	<Prompt bind:selected bind:value={text} />
 </main>
+
+<style>
+	main {
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+</style>

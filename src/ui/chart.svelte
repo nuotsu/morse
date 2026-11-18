@@ -80,7 +80,7 @@
 <svelte:window {onkeydown} />
 
 <figure
-	class="chart isolate grid text-center"
+	class="chart isolate grid text-center lg:text-[1.5em]"
 	style="--cols: {chart.cols}; grid-template-columns: repeat({chart.start.col -
 		1}, var(--w)) min-content repeat({chart.cols -
 		chart.start.col}, var(--w)); grid-template-rows: repeat({chart.rows}, var(--h))"
@@ -94,8 +94,10 @@
 		<button class="px-[.5ch]" onclick={() => (selected = null)}>
 			<span
 				class="grid bg-background px-[.5ch] transition-colors data-selected:bg-foreground data-selected:text-background"
-				data-selected={selected ? '' : undefined}>Start</span
+				data-selected={selected ? '' : undefined}
 			>
+				Start
+			</span>
 		</button>
 
 		<label class="group/sound" aria-label="Sound">
