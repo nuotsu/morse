@@ -39,7 +39,7 @@
 	</summary>
 
 	<dl
-		class="grid max-h-svh gap-x-ch overflow-y-auto border border-current/25 p-[.5ch] uppercase backdrop-blur"
+		class="no-scrollbar grid max-h-svh gap-x-ch overflow-y-auto border border-current/25 p-[.5ch] uppercase backdrop-blur"
 	>
 		{#each words as word (word)}
 			<div class="col-span-full grid grid-cols-subgrid items-center">
